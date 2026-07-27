@@ -1,4 +1,4 @@
-// --- 0. RENDEREAR MESES --- 
+// --- 0. RENDEREAR MESES ---
 function renderMonths() {
     const monthsGrid = document.getElementById('monthsGrid');
     if (!monthsGrid) return;
@@ -41,8 +41,8 @@ function renderBookList() {
         row.className = 'book-row';
         row.innerHTML = `
             <input type="checkbox" ${item.chk ? 'checked' : ''} onchange="updateBookItem(${index}, 'chk', this.checked)" class="checkbox-interactive">
-            <input type="text" value="${escapeHtml(item.title)}" oninput="updateBookItem(${index}, 'title', this.value)" placeholder="Título del libro...">
-            <input type="text" value="${escapeHtml(item.author)}" oninput="updateBookItem(${index}, 'author', this.value)" placeholder="Autor...">
+            <input type="text" value="${escapeHtml(item.title)}" oninput="updateBookItem(${index}, 'title', this.value)">
+            <input type="text" value="${escapeHtml(item.author)}" oninput="updateBookItem(${index}, 'author', this.value)">
             <button class="btn-delete-row" onclick="removeBookRow(${index})" title="Eliminar fila"><i class="fa-solid fa-xmark"></i></button>
         `;
         container.appendChild(row);
@@ -182,7 +182,7 @@ function renderFichas() {
 
             <div class="notes-container">
                 <div class="notes-header">Notas</div>
-                <textarea class="digital-notes-textarea" oninput="updateFichaField(${index}, 'notas', this.value)" placeholder="Escribe tus reflexiones aquí...">${escapeHtml(ficha.notas)}</textarea>
+                <textarea class="digital-notes-textarea" oninput="updateFichaField(${index}, 'notas', this.value)" >${escapeHtml(ficha.notas)}</textarea>
             </div>
 
             <!-- Papelera protegida (Solo para fichas creadas adicionales) -->
