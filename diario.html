@@ -15,18 +15,20 @@
     <!-- Estilos CSS -->
     <link rel="stylesheet" href="styles.css">
     <style>
-        #logoutBtn{
-            position: fixed; top: 14px; right: 14px; z-index: 50;
+        .session-icon{
+            position: fixed; top: 12px; left: 12px; z-index: 50;
+            width: 38px; height: 38px; border-radius: 50%;
             background: rgba(255,255,255,0.85); border: 1px solid var(--border-color, #ebd0d6);
-            color: var(--dark-rose, #6d3543); font-family: 'Montserrat', sans-serif; font-size: 12px;
-            padding: 7px 14px; border-radius: 20px; cursor: pointer; box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+            color: var(--dark-rose, #6d3543); font-size: 15px; cursor: pointer;
+            display: flex; align-items: center; justify-content: center;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.08); transition: background .2s;
         }
-        #logoutBtn:hover{ background:#fff; }
+        .session-icon:hover{ background:#fff; }
     </style>
 </head>
 <body>
 
-    <button id="logoutBtn">Cerrar sesión</button>
+    <button id="logoutBtn" class="session-icon" title="Cerrar sesión"><i class="fa-solid fa-right-from-bracket"></i></button>
 
     <!-- PÁGINA 1: PORTADA -->
     <!-- <div class="journal-page cover-page">
@@ -115,10 +117,16 @@
     <!-- Script JS (usa `db` y `auth` definidos arriba) -->
     <script src="script.js"></script>
 
-    <!-- Guardián de sesión: si no hay usuario, vuelve al login -->
+    <!-- Guardián de sesión: si no hay usuario, o no está aprobado, vuelve al login -->
     <script>
-        auth.onAuthStateChanged(user => {
+        auth.onAuthStateChanged(async user => {
             if (!user) {
+                window.location.href = 'index.html';
+                return;
+            }
+            const doc = await db.collection('users').doc(user.uid).get();
+            if (!doc.exists || doc.data().aprobado !== true) {
+                await auth.signOut();
                 window.location.href = 'index.html';
                 return;
             }

@@ -104,6 +104,7 @@
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/firebase/10.12.2/firebase-app-compat.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/firebase/10.12.2/firebase-auth-compat.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/firebase/10.12.2/firebase-firestore-compat.min.js"></script>
 <script>
 const firebaseConfig = {
   apiKey: "AIzaSyBiM3YiN1kObjDMQszhmgrWkqlvwFgreCY",
@@ -115,6 +116,7 @@ const firebaseConfig = {
 };
 firebase.initializeApp(firebaseConfig);
 const auth = firebase.auth();
+const db = firebase.firestore();
 
 let mode = 'login';
 const authTitle = document.getElementById('authTitle');
@@ -140,11 +142,24 @@ submitBtn.addEventListener('click', async () => {
   if(!email || !password){ authError.textContent = 'Completa correo y contraseña.'; return; }
   try{
     if(mode === 'login'){
-      await auth.signInWithEmailAndPassword(email, password);
+      const cred = await auth.signInWithEmailAndPassword(email, password);
+      const doc = await db.collection('users').doc(cred.user.uid).get();
+      if(!doc.exists || doc.data().aprobado !== true){
+        await auth.signOut();
+        authError.textContent = 'Tu cuenta todavía no ha sido aprobada.';
+        return;
+      }
+      window.location.href = 'diario.html';
     } else {
-      await auth.createUserWithEmailAndPassword(email, password);
+      const cred = await auth.createUserWithEmailAndPassword(email, password);
+      await db.collection('users').doc(cred.user.uid).set({
+        email: email.toLowerCase(),
+        aprobado: false,
+        creado: firebase.firestore.FieldValue.serverTimestamp()
+      });
+      await auth.signOut();
+      authError.textContent = 'Cuenta creada. Debes esperar a que se apruebe tu acceso antes de poder entrar.';
     }
-    window.location.href = 'diario.html';
   } catch(e){
     authError.textContent = traducirError(e.code);
   }
@@ -162,8 +177,15 @@ function traducirError(code){
   return map[code] || 'Ocurrió un error. Intenta de nuevo.';
 }
 
-auth.onAuthStateChanged(user => {
-  if(user){ window.location.href = 'diario.html'; }
+// Si ya hay sesión activa, comprobar aprobación antes de mandar al diario
+auth.onAuthStateChanged(async user => {
+  if(!user) return;
+  const doc = await db.collection('users').doc(user.uid).get();
+  if(doc.exists && doc.data().aprobado === true){
+    window.location.href = 'diario.html';
+  } else {
+    await auth.signOut();
+  }
 });
 </script>
 </body>
