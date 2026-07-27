@@ -27,7 +27,7 @@ function createInitialBookList() {
     return initial;
 }
 
-let bookListData = JSON.parse(localStorage.getItem('journal_book_list_v3')) || createInitialBookList();
+let bookListData = createInitialBookList();
 
 function renderBookList() {
     const container = document.getElementById('bookListContainer');
@@ -67,13 +67,11 @@ function removeBookRow(index) {
 }
 
 function saveBookList() {
-    localStorage.setItem('journal_book_list_v3', JSON.stringify(bookListData));
+    scheduleSave();
 }
 
 // --- 2. MANEJO DE FICHAS DE LECTURA DINÁMICAS ---
-let fichasData = JSON.parse(localStorage.getItem('journal_fichas_v3')) || [
-    createEmptyFichaObject()
-];
+let fichasData = [ createEmptyFichaObject() ];
 
 function createEmptyFichaObject() {
     return {
@@ -247,21 +245,12 @@ function handleCoverUpload(event, index) {
 }
 
 function saveFichas() {
-    localStorage.setItem('journal_fichas_v3', JSON.stringify(fichasData));
+    scheduleSave();
 }
 
 // --- 3. AUTO-GUARDADO DE MESES Y TOTALES ---
 function saveMonthData() {
-    document.querySelectorAll('.save-field').forEach(el => {
-        localStorage.setItem(el.id, el.value);
-    });
-}
-
-function loadMonthData() {
-    document.querySelectorAll('.save-field').forEach(el => {
-        const val = localStorage.getItem(el.id);
-        if (val !== null) el.value = val;
-    });
+    scheduleSave();
 }
 
 document.addEventListener('input', (e) => {
@@ -275,10 +264,51 @@ function escapeHtml(text) {
     return text.replace(/"/g, "&quot;");
 }
 
-// Cargar todo al iniciar el DOM
+// --- 4. SINCRONIZACIÓN CON FIREBASE (sustituye a localStorage) ---
+// `db` y `auth` se inicializan en diario.html antes de cargar este script.
+let saveTimer = null;
+function scheduleSave() {
+    clearTimeout(saveTimer);
+    saveTimer = setTimeout(guardarDatos, 700);
+}
+
+function guardarDatos() {
+    if (!window.currentUser) return;
+    const campos = {};
+    document.querySelectorAll('.save-field').forEach(el => { campos[el.id] = el.value; });
+
+    db.collection('users').doc(window.currentUser.uid).collection('journal').doc('main').set({
+        bookList: bookListData,
+        fichas: fichasData,
+        campos: campos,
+        actualizado: firebase.firestore.FieldValue.serverTimestamp()
+    }, { merge: true }).catch(err => {
+        console.error(err);
+        alert('No se pudo guardar. Si subiste varias portadas de imagen, puede que el diario haya crecido demasiado — intenta quitar alguna imagen.');
+    });
+}
+
+function cargarDatos(uid) {
+    db.collection('users').doc(uid).collection('journal').doc('main').get().then(docSnap => {
+        if (docSnap.exists) {
+            const data = docSnap.data();
+            if (data.bookList && data.bookList.length) bookListData = data.bookList;
+            if (data.fichas && data.fichas.length) fichasData = data.fichas;
+            renderBookList();
+            renderFichas();
+            if (data.campos) {
+                Object.keys(data.campos).forEach(id => {
+                    const el = document.getElementById(id);
+                    if (el) el.value = data.campos[id];
+                });
+            }
+        }
+    }).catch(err => console.error(err));
+}
+
+// Cargar todo al iniciar el DOM (con valores por defecto; Firebase los sobrescribe al autenticar)
 window.addEventListener('DOMContentLoaded', () => {
     renderMonths();
     renderBookList();
     renderFichas();
-    loadMonthData();
 });

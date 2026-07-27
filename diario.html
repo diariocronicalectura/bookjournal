@@ -14,13 +14,24 @@
 
     <!-- Estilos CSS -->
     <link rel="stylesheet" href="styles.css">
+    <style>
+        #logoutBtn{
+            position: fixed; top: 14px; right: 14px; z-index: 50;
+            background: rgba(255,255,255,0.85); border: 1px solid var(--border-color, #ebd0d6);
+            color: var(--dark-rose, #6d3543); font-family: 'Montserrat', sans-serif; font-size: 12px;
+            padding: 7px 14px; border-radius: 20px; cursor: pointer; box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+        }
+        #logoutBtn:hover{ background:#fff; }
+    </style>
 </head>
 <body>
 
+    <button id="logoutBtn">Cerrar sesión</button>
+
     <!-- PÁGINA 1: PORTADA -->
-    <div class="journal-page cover-page">
+    <!-- <div class="journal-page cover-page">
         <img class="cover-img" src="portada.jpeg" alt="Book Journal Portada">
-    </div>
+    </div>-->
 
     <!-- PÁGINA 2: LECTURAS DEL AÑO -->
     <div class="journal-page">
@@ -82,7 +93,39 @@
     <!-- CONTENEDOR DE FICHAS DE LECTURA (DINÁMICAS) -->
     <div id="fichasContainer" style="display: flex; flex-direction: column; gap: 30px; width: 100%; align-items: center;"></div>
 
-    <!-- Script JS -->
+    <!-- Firebase (debe cargar ANTES de script.js para que pueda usar `db`/`auth`) -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/firebase/10.12.2/firebase-app-compat.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/firebase/10.12.2/firebase-auth-compat.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/firebase/10.12.2/firebase-firestore-compat.min.js"></script>
+    <script>
+        const firebaseConfig = {
+          apiKey: "AIzaSyBiM3YiN1kObjDMQszhmgrWkqlvwFgreCY",
+          authDomain: "bookjournal-a201e.firebaseapp.com",
+          projectId: "bookjournal-a201e",
+          storageBucket: "bookjournal-a201e.firebasestorage.app",
+          messagingSenderId: "336171207420",
+          appId: "1:336171207420:web:59a58a5fe19eda09bb6579"
+        };
+        firebase.initializeApp(firebaseConfig);
+        const auth = firebase.auth();
+        const db = firebase.firestore();
+        window.currentUser = null;
+    </script>
+
+    <!-- Script JS (usa `db` y `auth` definidos arriba) -->
     <script src="script.js"></script>
+
+    <!-- Guardián de sesión: si no hay usuario, vuelve al login -->
+    <script>
+        auth.onAuthStateChanged(user => {
+            if (!user) {
+                window.location.href = 'index.html';
+                return;
+            }
+            window.currentUser = user;
+            cargarDatos(user.uid);
+        });
+        document.getElementById('logoutBtn').addEventListener('click', () => auth.signOut());
+    </script>
 </body>
 </html>
