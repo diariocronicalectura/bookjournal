@@ -1,4 +1,4 @@
-// --- 0. RENDEREAR MESES ---
+// --- 0. RENDEREAR MESES --- 
 function renderMonths() {
     const monthsGrid = document.getElementById('monthsGrid');
     if (!monthsGrid) return;
