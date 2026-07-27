@@ -1,0 +1,40 @@
+# 📚 Book Journal Digital
+
+Un diario de lectura digital interactivo, elegante y responsivo para organizar, registrar y hacer seguimiento de tus lecturas del año.
+
+---
+
+## ✨ Características principales
+
+* 🖼️ **Portada personalizada:** Espacio integrado para la imagen de portada de tu diario.
+* 📊 **Resumen Mensual:** Registro de libros y páginas leídas mes a mes con cálculo de totales.
+* 📋 **Lista de Libros:** Control dinámico de lecturas pendientes y completadas con casillas interactiva.
+* 🔖 **Fichas de Lectura Dinámicas:**
+  * Registro de título, autor, páginas y fechas de inicio/fin.
+  * Subida de portada para cada libro individual.
+  * Sistema de valoración interactivo con estrellas (Rating) ⭐ y chiles (Spice) 🌶️.
+  * Selector de formato de lectura (*Físico, EPUB, Kindle, PDF*).
+  * Cuaderno de notas digital con líneas integradas para reflexiones y reseñas.
+  * Sistema de fichas infinitas con protección automática de la primera ficha base.
+* 💾 **Persistencia de datos:** Todos los cambios se guardan automáticamente en el navegador (`localStorage`), por lo que no perderás nada al cerrar o recargar la página.
+* 🖨️ **Modo Impresión:** Estilos optimizados con `@media print` en formato A4 por si prefieres guardarlo o imprimirlo en PDF.
+
+---
+
+## 🛠️ Tecnologías utilizadas
+
+* **HTML5:** Estructura semántica e interactiva.
+* **CSS3:** Estilos personalizados, variables CSS, Flexbox, CSS Grid y diseño responsivo adaptado a móviles y tablets.
+* **JavaScript (Vanilla ES6):** Manipulación del DOM, gestión de estados dinámicos y almacenamiento local.
+* **Google Fonts & FontAwesome:** Tipografías (*Cormorant Garamond, Montserrat, Alex Brush*) e iconografía.
+
+---
+
+## 🚀 Cómo ejecutar el proyecto
+
+1. Clona este repositorio o descarga los archivos.
+2. Asegúrate de tener los archivos `index.html`, `styles.css`, `script.js` y tu imagen de portada en la misma carpeta.
+3. Abre el archivo `index.html` en cualquier navegador web. ¡Y listo!
+
+---
+*Creado con ❤️ para amantes de la lectura.*

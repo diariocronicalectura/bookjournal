@@ -1,0 +1,687 @@
+:root {
+    --bg-page: #fdf6f7;
+    --card-bg: #ffffff;
+    --primary-rose: #b56576;
+    --dark-rose: #6d3543;
+    --soft-pink: #f4d0d8;
+    --accent-pink: #eaacb8;
+    --text-main: #4a383d;
+    --text-light: #8c7077;
+    --border-color: #ebd0d6;
+    --line-color: #f2d8df;
+}
+
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
+
+body {
+    background-color: #ded1d5;
+    font-family: 'Montserrat', sans-serif;
+    color: var(--text-main);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 30px 15px 40px 15px;
+    gap: 30px;
+}
+
+/* Corregir visualización de números */
+input[type="number"], 
+input[type="text"], 
+.summary-item input,
+.num-font {
+    font-family: 'Montserrat', sans-serif !important;
+    font-variant-numeric: lining-nums tabular-nums !important;
+}
+
+/* Page Container (A4 Ratio Base) */
+.journal-page {
+    width: 100%;
+    max-width: 210mm;
+    min-height: 297mm;
+    background-color: var(--bg-page);
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.12);
+    position: relative;
+    padding: 22mm 20mm;
+    display: flex;
+    flex-direction: column;
+    border-radius: 4px;
+}
+
+.journal-page::before {
+    content: '';
+    position: absolute;
+    top: 10mm;
+    left: 10mm;
+    right: 10mm;
+    bottom: 10mm;
+    border: 1px solid var(--border-color);
+    pointer-events: none;
+    border-radius: 2px;
+}
+
+.journal-page::after {
+    content: '';
+    position: absolute;
+    top: 12mm;
+    left: 12mm;
+    right: 12mm;
+    bottom: 12mm;
+    border: 0.5px dashed var(--accent-pink);
+    pointer-events: none;
+}
+
+/* Portada */
+.cover-page {
+    padding: 0;
+    background: #fff;
+    min-height: 297mm;
+    overflow: hidden;
+}
+
+.cover-page::before, .cover-page::after {
+    display: none;
+}
+
+.cover-img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+}
+
+/* Botones de Acción Integrados en la Esquina */
+.btn-add-ficha-corner {
+    position: absolute;
+    bottom: 16mm;
+    right: 16mm;
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    background: linear-gradient(135deg, var(--primary-rose), var(--dark-rose));
+    color: white;
+    border: none;
+    box-shadow: 0 4px 12px rgba(109, 53, 67, 0.3);
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 16px;
+    z-index: 10;
+    transition: transform 0.2s, box-shadow 0.2s;
+}
+
+.btn-add-ficha-corner:hover {
+    transform: scale(1.1);
+    box-shadow: 0 6px 16px rgba(109, 53, 67, 0.4);
+}
+
+.btn-delete-ficha-corner {
+    position: absolute;
+    bottom: 16mm;
+    left: 16mm;
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    background: #ffffff;
+    color: var(--primary-rose);
+    border: 1px solid var(--border-color);
+    box-shadow: 0 3px 10px rgba(109, 53, 67, 0.12);
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 15px;
+    z-index: 10;
+    transition: all 0.2s;
+}
+
+.btn-delete-ficha-corner:hover {
+    background: #d9534f;
+    color: white;
+    border-color: #d9534f;
+    transform: scale(1.1);
+}
+
+/* Inputs Estilizados */
+input[type="text"], input[type="number"] {
+    border: none;
+    border-bottom: 1px dotted var(--accent-pink);
+    background: transparent;
+    font-size: 13px;
+    color: var(--text-main);
+    outline: none;
+    width: 100%;
+    padding: 2px 4px;
+    transition: border-color 0.2s;
+}
+
+input[type="text"]:focus, input[type="number"]:focus {
+    border-bottom: 1px solid var(--primary-rose);
+    background: rgba(244, 208, 216, 0.15);
+}
+
+/* Header Styles */
+.page-header {
+    text-align: center;
+    margin-bottom: 25px;
+    position: relative;
+    z-index: 2;
+}
+
+.page-title {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 34px;
+    font-weight: 600;
+    color: var(--dark-rose);
+    letter-spacing: 1px;
+    text-transform: uppercase;
+}
+
+.page-subtitle {
+    font-family: 'Alex Brush', cursive;
+    font-size: 28px;
+    color: var(--primary-rose);
+    margin-top: -5px;
+}
+
+.header-divider {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 15px;
+    margin-top: 8px;
+}
+
+.header-divider .line {
+    height: 1px;
+    width: 60px;
+    background: linear-gradient(to right, transparent, var(--accent-pink), transparent);
+}
+
+.header-divider .flower {
+    color: var(--primary-rose);
+    font-size: 12px;
+}
+
+/* Lecturas del Año Grid */
+.months-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 18px;
+    flex-grow: 1;
+    z-index: 2;
+}
+
+.month-card {
+    background: var(--card-bg);
+    border: 1px solid var(--border-color);
+    border-radius: 12px;
+    padding: 14px 16px;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    box-shadow: 0 4px 12px rgba(181, 101, 118, 0.05);
+}
+
+.month-name {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 20px;
+    font-weight: 700;
+    color: var(--dark-rose);
+    border-bottom: 1px solid var(--line-color);
+    padding-bottom: 6px;
+    margin-bottom: 10px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.month-name i {
+    font-size: 12px;
+    color: var(--accent-pink);
+}
+
+.month-field {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    font-size: 13px;
+    color: var(--text-main);
+    margin-bottom: 6px;
+    gap: 8px;
+}
+
+.month-field span {
+    font-weight: 500;
+    min-width: 55px;
+}
+
+.year-summary-box {
+    z-index: 2;
+    margin-top: 20px;
+    background: linear-gradient(135deg, #fceef1, #f9e3e7);
+    border: 1px solid var(--accent-pink);
+    border-radius: 12px;
+    padding: 15px 25px;
+    display: flex;
+    justify-content: space-around;
+    align-items: center;
+}
+
+.summary-item {
+    text-align: center;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.summary-item .label {
+    font-size: 11px;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    color: var(--text-light);
+    margin-bottom: 4px;
+}
+
+.summary-item input {
+    font-size: 22px !important;
+    font-weight: 700;
+    color: var(--dark-rose);
+    text-align: center;
+    width: 100px;
+    border-bottom: 1px dashed var(--primary-rose);
+}
+
+/* Dynamic Book List */
+.book-list-container {
+    z-index: 2;
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+    flex-grow: 1;
+}
+
+.book-list-header {
+    display: grid;
+    grid-template-columns: 35px 1fr 180px 30px;
+    padding: 8px 12px;
+    background: var(--soft-pink);
+    border-radius: 8px;
+    font-size: 12px;
+    font-weight: 600;
+    color: var(--dark-rose);
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+.book-row {
+    display: grid;
+    grid-template-columns: 35px 1fr 180px 30px;
+    align-items: center;
+    padding: 5px 12px;
+    background: var(--card-bg);
+    border: 1px solid var(--border-color);
+    border-radius: 8px;
+    gap: 10px;
+}
+
+.checkbox-interactive {
+    width: 18px;
+    height: 18px;
+    accent-color: var(--primary-rose);
+    cursor: pointer;
+}
+
+.btn-delete-row {
+    background: transparent;
+    border: none;
+    color: var(--accent-pink);
+    cursor: pointer;
+    font-size: 14px;
+    transition: color 0.2s;
+}
+
+.btn-delete-row:hover {
+    color: #d9534f;
+}
+
+.add-row-control {
+    z-index: 2;
+    display: flex;
+    justify-content: center;
+    margin-top: 15px;
+}
+
+.btn-add-inline {
+    background: #fff;
+    color: var(--dark-rose);
+    border: 1px solid var(--primary-rose);
+    padding: 8px 18px;
+    border-radius: 20px;
+    font-size: 12px;
+    font-weight: 600;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    transition: transform 0.2s, background 0.2s;
+}
+
+.btn-add-inline:hover {
+    background: var(--soft-pink);
+    transform: translateY(-1px);
+}
+
+/* Ficha de Lectura Grid */
+.ficha-grid {
+    z-index: 2;
+    display: grid;
+    grid-template-columns: 220px 1fr;
+    gap: 25px;
+    margin-bottom: 15px;
+}
+
+.cover-box-upload {
+    background: var(--card-bg);
+    border: 2px dashed var(--accent-pink);
+    border-radius: 12px;
+    height: 360px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    color: var(--text-light);
+    text-align: center;
+    padding: 15px;
+    gap: 12px;
+    cursor: pointer;
+    position: relative;
+    overflow: hidden;
+    transition: border-color 0.2s, background-color 0.2s;
+}
+
+.cover-box-upload:hover {
+    border-color: var(--primary-rose);
+    background-color: #fff9fa;
+}
+
+.cover-box-upload img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    position: absolute;
+    top: 0;
+    left: 0;
+    display: none;
+}
+
+.details-box {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    justify-content: space-between;
+}
+
+.field-group {
+    display: flex;
+    align-items: baseline;
+    gap: 10px;
+}
+
+.field-label {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 17px;
+    font-weight: 700;
+    color: var(--dark-rose);
+    min-width: 65px;
+}
+
+.two-cols-field {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 15px;
+}
+
+.format-section {
+    background: var(--card-bg);
+    border: 1px solid var(--border-color);
+    border-radius: 10px;
+    padding: 8px 12px;
+}
+
+.format-title {
+    font-size: 11px;
+    font-weight: 600;
+    color: var(--text-light);
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    margin-bottom: 6px;
+}
+
+.format-options {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 12px;
+    font-size: 12px;
+}
+
+.format-option {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    cursor: pointer;
+}
+
+.rating-box {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    background: #fff;
+    border: 1px solid var(--border-color);
+    border-radius: 10px;
+    padding: 8px 12px;
+}
+
+.rating-stars, .rating-chilis {
+    display: flex;
+    gap: 4px;
+    cursor: pointer;
+}
+
+.star-icon {
+    font-size: 22px;
+    color: #d1c4c7;
+    font-variation-settings: 'FILL' 0;
+    transition: color 0.2s;
+}
+
+.star-icon.active {
+    color: #f39c12;
+    font-variation-settings: 'FILL' 1;
+}
+
+.chili-icon {
+    font-size: 22px;
+    color: #d1c4c7;
+    transition: color 0.2s;
+}
+
+.chili-icon.active {
+    color: #eb0d0d;
+}
+
+.notes-container {
+    z-index: 2;
+    display: flex;
+    flex-direction: column;
+    margin-top: 5px;
+}
+
+.notes-header {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 20px;
+    font-weight: 700;
+    color: var(--dark-rose);
+    margin-bottom: 8px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.notes-header::after {
+    content: '';
+    flex-grow: 1;
+    height: 1px;
+    background: var(--border-color);
+}
+
+.digital-notes-textarea {
+    width: 100%;
+    height: 168px;
+    border: none;
+    background: transparent;
+    background-image: repeating-linear-gradient(
+        transparent,
+        transparent 27px,
+        var(--line-color) 28px
+    );
+    line-height: 28px;
+    resize: none;
+    font-family: 'Montserrat', sans-serif;
+    font-size: 13.5px;
+    color: var(--text-main);
+    outline: none;
+    padding: 0;
+}
+
+/* =====================================================
+   ADAPTABILIDAD RESPONSIVE (Tablets / Móviles)
+   ===================================================== */
+@media (max-width: 820px) {
+    body {
+        padding: 15px 10px;
+        gap: 20px;
+    }
+
+    .journal-page {
+        padding: 25px 20px 35px 20px;
+        min-height: auto;
+    }
+
+    .cover-page {
+        min-height: 100vh;
+    }
+
+    .journal-page::before {
+        top: 8px; left: 8px; right: 8px; bottom: 8px;
+    }
+
+    .journal-page::after {
+        top: 10px; left: 10px; right: 10px; bottom: 10px;
+    }
+
+    .months-grid {
+        grid-template-columns: repeat(2, 1fr);
+        gap: 12px;
+    }
+
+    .ficha-grid {
+        grid-template-columns: 1fr;
+        gap: 18px;
+    }
+
+    .cover-box-upload {
+        height: 260px;
+    }
+
+    .book-list-header, .book-row {
+        grid-template-columns: 30px 1fr 140px 25px;
+        font-size: 11px;
+        gap: 6px;
+    }
+
+    .btn-add-ficha-corner, .btn-delete-ficha-corner {
+        bottom: 12px;
+        width: 36px;
+        height: 36px;
+        font-size: 14px;
+    }
+
+    .btn-add-ficha-corner { right: 12px; }
+    .btn-delete-ficha-corner { left: 12px; }
+}
+
+@media (max-width: 480px) {
+    .months-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .book-list-header, .book-row {
+        grid-template-columns: 25px 1fr 90px 22px;
+        padding: 5px 6px;
+    }
+
+    .page-title {
+        font-size: 26px;
+    }
+
+    .page-subtitle {
+        font-size: 22px;
+    }
+
+    .two-cols-field {
+        grid-template-columns: 1fr;
+        gap: 8px;
+    }
+}
+
+/* =====================================================
+   REGLAS DE IMPRESIÓN (Escala A4)
+   ===================================================== */
+@media print {
+    body {
+        background: none;
+        padding: 0;
+    }
+
+    .btn-add-ficha-corner,
+    .btn-delete-ficha-corner,
+    .btn-delete-row, 
+    .add-row-control {
+        display: none !important;
+    }
+
+    .journal-page {
+        box-shadow: none;
+        page-break-after: always;
+        border-radius: 0;
+        width: 210mm !important;
+        min-height: 297mm !important;
+        padding: 22mm 20mm !important;
+        margin-bottom: 0;
+    }
+
+    .journal-page::before {
+        top: 10mm; left: 10mm; right: 10mm; bottom: 10mm;
+    }
+
+    .journal-page::after {
+        top: 12mm; left: 12mm; right: 12mm; bottom: 12mm;
+    }
+
+    .months-grid {
+        grid-template-columns: repeat(3, 1fr) !important;
+    }
+
+    .ficha-grid {
+        grid-template-columns: 220px 1fr !important;
+    }
+
+    .cover-box-upload {
+        height: 360px !important;
+    }
+}
