@@ -164,6 +164,24 @@ input[type="text"]:focus, input[type="number"]:focus {
     background: rgba(244, 208, 216, 0.15);
 }
 
+input[type="date"] {
+    border: none;
+    border-bottom: 1px dotted var(--accent-pink);
+    background: transparent;
+    font-family: 'Montserrat', sans-serif;
+    font-size: 13px;
+    color: var(--text-main);
+    outline: none;
+    width: 100%;
+    padding: 2px 4px;
+    transition: border-color 0.2s;
+}
+
+input[type="date"]:focus {
+    border-bottom: 1px solid var(--primary-rose);
+    background: rgba(244, 208, 216, 0.15);
+}
+
 /* Header Styles */
 .page-header {
     text-align: center;

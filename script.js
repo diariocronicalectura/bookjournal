@@ -136,11 +136,11 @@ function renderFichas() {
                     <div class="two-cols-field">
                         <div class="field-group">
                             <span class="field-label" style="min-width: 40px;">Inicio:</span>
-                            <input type="text" value="${escapeHtml(ficha.inicio)}" oninput="updateFichaField(${index}, 'inicio', this.value)" placeholder="DD/MM/AA">
+                            <input type="date" value="${ficha.inicio || ''}" oninput="updateFichaField(${index}, 'inicio', this.value)">
                         </div>
                         <div class="field-group">
                             <span class="field-label" style="min-width: 30px;">Fin:</span>
-                            <input type="text" value="${escapeHtml(ficha.fin)}" oninput="updateFichaField(${index}, 'fin', this.value)" placeholder="DD/MM/AA">
+                            <input type="date" value="${ficha.fin || ''}" oninput="updateFichaField(${index}, 'fin', this.value)">
                         </div>
                     </div>
 
